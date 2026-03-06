@@ -6,7 +6,7 @@ from ollama import chat
 
 load_dotenv()
 
-NUM_RUNS_TIMES = 1
+NUM_RUNS_TIMES = 3
 
 SYSTEM_PROMPT = """
 You are a coding assistant. Output ONLY a single fenced Python code block that defines
@@ -15,7 +15,15 @@ Keep the implementation minimal.
 """
 
 # TODO: Fill this in!
-YOUR_REFLEXION_PROMPT = ""
+YOUR_REFLEXION_PROMPT = """
+You are a coding assistant that improves Python code based on test feedback.
+You will receive a previous implementation of is_valid_password(password: str) -> bool
+along with a list of failing test cases and their diagnostics.
+
+Analyze the failures carefully, identify what checks are missing or incorrect,
+and output ONLY a single fenced Python code block with the corrected implementation.
+No prose or comments. Keep the implementation minimal.
+"""
 
 
 # Ground-truth test suite used to evaluate generated code
@@ -96,7 +104,13 @@ def your_build_reflexion_context(prev_code: str, failures: List[str]) -> str:
 
     Return a string that will be sent as the user content alongside the reflexion system prompt.
     """
-    return ""
+    failure_details = "\n".join(f"- {f}" for f in failures)
+    return (
+        f"Here is my previous implementation:\n"
+        f"```python\n{prev_code}\n```\n\n"
+        f"It failed the following test cases:\n{failure_details}\n\n"
+        f"Please fix the implementation so that all test cases pass."
+    )
 
 
 def apply_reflexion(
@@ -134,18 +148,25 @@ def run_reflexion_flow(
     else:
         print(f"FAILURE (initial implementation failed some tests): {failures}")
 
-    # 2) Single reflexion iteration
-    improved_code = apply_reflexion(reflexion_prompt, build_context, initial_code, failures)
-    print("\nImproved code:\n" + improved_code)
-    improved_func = load_function_from_code(improved_code)
-    passed2, failures2 = evaluate_function(improved_func)
-    if passed2:
-        print("SUCCESS")
-        return True
+    # 2) Reflexion iterations
+    current_code = initial_code
+    current_failures = failures
+    for i in range(NUM_RUNS_TIMES):
+        print(f"\n--- Reflexion iteration {i + 1}/{NUM_RUNS_TIMES} ---")
+        improved_code = apply_reflexion(reflexion_prompt, build_context, current_code, current_failures)
+        print("Improved code:\n" + improved_code)
+        improved_func = load_function_from_code(improved_code)
+        passed, current_failures = evaluate_function(improved_func)
+        if passed:
+            print(f"SUCCESS (after {i + 1} reflexion iteration(s))")
+            return True
 
-    print("Tests still failing after reflexion:")
-    for f in failures2:
-        print("- " + f)
+        print(f"Still failing ({len(current_failures)} test(s)):")
+        for f in current_failures:
+            print("- " + f)
+        current_code = improved_code
+
+    print("\nAll reflexion iterations exhausted. Tests still failing.")
     return False
 
 
