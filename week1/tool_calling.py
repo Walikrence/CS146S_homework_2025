@@ -106,7 +106,7 @@ def run_model_for_tool_call(system_prompt: str) -> Dict[str, Any]:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": "Call the tool now."},
         ],
-        options={"temperature": 0.3},
+        options={"temperature": 0.3, "num_ctx": 8192},
     )
     content = response.message.content
     return extract_tool_call(content)

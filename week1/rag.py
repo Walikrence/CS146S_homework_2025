@@ -102,7 +102,7 @@ def test_your_prompt(system_prompt: str, context_provider: Callable[[List[str]],
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            options={"temperature": 0.0},
+            options={"temperature": 0.0, "num_ctx": 8192},
         )
         output_text = response.message.content
         code = extract_code_block(output_text)

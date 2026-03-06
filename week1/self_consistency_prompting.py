@@ -53,7 +53,7 @@ def test_your_prompt(system_prompt: str) -> bool:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": USER_PROMPT},
             ],
-            options={"temperature": 1},
+            options={"temperature": 1, "num_ctx": 8192},
         )
         output_text = response.message.content
         final_answer = extract_final_answer(output_text)

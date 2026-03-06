@@ -86,7 +86,7 @@ def generate_initial_function(system_prompt: str) -> str:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": "Provide the implementation now."},
         ],
-        options={"temperature": 0.2},
+        options={"temperature": 0.2, "num_ctx": 8192},
     )
     return extract_code_block(response.message.content)
 
@@ -113,7 +113,7 @@ def apply_reflexion(
             {"role": "system", "content": reflexion_prompt},
             {"role": "user", "content": reflection_context},
         ],
-        options={"temperature": 0.2},
+        options={"temperature": 0.2, "num_ctx": 8192},
     )
     return extract_code_block(response.message.content)
 
