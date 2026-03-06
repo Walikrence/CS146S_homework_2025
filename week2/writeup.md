@@ -9,8 +9,8 @@ Fill out all of the `TODO`s in this file.
 
 ## SUBMISSION DETAILS
 
-Name: **Jiaxiang** \
-SUNet ID: **jiaxiang** \
+Name: **walikrence** \
+SUNet ID: **walikrence** \
 Citations: Ollama Structured Outputs https://ollama.com/blog/structured-outputs ; FastAPI docs https://fastapi.tiangolo.com/ ; Pydantic V2 docs https://docs.pydantic.dev/
 
 This assignment took me about **3** hours to do. 

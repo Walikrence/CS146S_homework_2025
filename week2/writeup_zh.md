@@ -9,8 +9,8 @@
 
 ## 提交信息
 
-姓名：**Jiaxiang** \
-SUNet ID：**jiaxiang** \
+姓名：**walikrence** \
+SUNet ID：**walikrence** \
 参考引用：Ollama 结构化输出文档 https://ollama.com/blog/structured-outputs ；FastAPI 官方文档 https://fastapi.tiangolo.com/ ；Pydantic V2 文档 https://docs.pydantic.dev/
 
 本次作业大约花费了 **3** 小时。

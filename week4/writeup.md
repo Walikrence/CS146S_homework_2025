@@ -9,8 +9,8 @@ Fill out all of the `TODO`s in this file.
 
 ## SUBMISSION DETAILS
 
-Name: **TODO** \
-SUNet ID: **TODO** \
+Name: **walikrence** \
+SUNet ID: **walikrence** \
 Citations: **TODO**
 
 This assignment took me about **TODO** hours to do. 
