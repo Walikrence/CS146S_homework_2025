@@ -6,6 +6,7 @@ from typing import List
 import json
 from typing import Any
 from ollama import chat
+from pydantic import BaseModel
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -87,3 +88,41 @@ def _looks_imperative(sentence: str) -> bool:
         "investigate",
     }
     return first.lower() in imperative_starters
+
+
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "mistral-nemo:12b")
+
+
+class ActionItems(BaseModel):
+    items: List[str]
+
+
+def extract_action_items_llm(text: str) -> List[str]:
+    """Use Ollama LLM to extract action items from free-form text."""
+    if not text or not text.strip():
+        return []
+
+    try:
+        response = chat(
+            model=OLLAMA_MODEL,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a helpful assistant that extracts action items from notes. "
+                        "Return ONLY the action items as a JSON object with an 'items' key "
+                        "containing a list of strings. Each string should be a concise, "
+                        "actionable task. If there are no action items, return an empty list."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": text,
+                },
+            ],
+            format=ActionItems.model_json_schema(),
+        )
+        result = ActionItems.model_validate_json(response.message.content)
+        return result.items
+    except Exception as e:
+        raise RuntimeError(f"LLM extraction failed: {e}") from e
