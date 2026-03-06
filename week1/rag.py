@@ -37,7 +37,12 @@ QUESTION = (
 
 
 # TODO: Fill this in!
-YOUR_SYSTEM_PROMPT = ""
+YOUR_SYSTEM_PROMPT = (
+    "You are a Python developer. Generate code strictly based on the provided context documentation. "
+    "Use only the Base URL, endpoints, and authentication method described in the context. "
+    "Do not invent or assume any details not present in the context. "
+    "Return your answer as a single fenced Python code block."
+)
 
 
 # For this simple example
@@ -52,11 +57,8 @@ REQUIRED_SNIPPETS = [
 
 
 def YOUR_CONTEXT_PROVIDER(corpus: List[str]) -> List[str]:
-    """TODO: Select and return the relevant subset of documents from CORPUS for this task.
-
-    For example, return [] to simulate missing context, or [corpus[0]] to include the API docs.
-    """
-    return []
+    """Return all available API documentation as context."""
+    return corpus
 
 
 def make_user_prompt(question: str, context_docs: List[str]) -> str:
